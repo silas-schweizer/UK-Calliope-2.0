@@ -1,0 +1,8 @@
+#files
+/data/time_series_60min_singleindex.csv
+/plots/
+.snakemake/
+.vscode/
+.ipynb_checkpoints/
+
+
