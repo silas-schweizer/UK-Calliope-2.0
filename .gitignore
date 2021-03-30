@@ -4,5 +4,5 @@
 .snakemake/
 .vscode/
 .ipynb_checkpoints/
-
+/data/shapefile
 
