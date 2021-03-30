@@ -20,6 +20,12 @@ rule download_datasets:
         curl -sLo {output.calliope_zones} '{URL_LAU1_CALLIOPE_ZONES}'
         curl -sLo {output.load_profile} '{URL_LOAD}'
         """
+rule unzip_calliope_zones: 
+    input: 
+        "data/calliope_zones.zip"
+    output:
+        "data/calliope_zones/"
+    shell: "unzip -d data/ data/calliope_zones.zip"
 
 #add load profile as input
 rule generate_elec_profile:
@@ -27,7 +33,7 @@ rule generate_elec_profile:
         elec_lau1="data/elec_lau1.csv",
         lau1_units="data/lau1_units.geojson",
         load_profile="data/load_profile.csv", 
-    	calliope_zones="data/shapefile/",
+    	calliope_zones="data/shapefile",
         pop_uk="shapefiles/population-uk.tif"
     params: 
         year = config["year"]
