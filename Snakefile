@@ -7,6 +7,7 @@ URL_LOAD = "https://data.open-power-system-data.org/time_series/latest/time_seri
 URL_GAS_LAU1= "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/853197/gas_LA_stacked.csv"
 URL_NUTS3_SHAPEFILE= "https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_03M_2010_4326_LEVL_3.geojson"
 URL_NUTS3_DWELLING= 'https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/cens_11dwob_r3.tsv.gz'
+URL_HOUSEHOLD_ENERGY='https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/nrg_d_hhq.tsv.gz' 
 
 rule download_electricity_datasets:
     message: "Download datasets"
@@ -85,3 +86,20 @@ rule gas_dwelling:
         nuts3_dwelling= "data/cens_11dwob_r3.tsv.gz"
     output: "data/gas_zones_housetypes.csv" 
     notebook: "notebooks/gas_dwelling.py.ipynb"
+
+rule download_household_energy_data:
+    message: "Download household energy data"
+    output: 
+        household_energy ="data/nrg_d_hhq.tsv.gz"
+    shell: 
+        "curl -sLo {output.household_energy} '{URL_HOUSEHOLD_ENERGY}'"
+
+rule calculate_heat_profiles:
+    input:
+        household_energy ="data/nrg_d_hhq.tsv.gz",
+        gas_zones_housetypes="data/gas_zones_housetypes.csv",
+        space_profile="data/demand_profiles/space-heat-profile.csv",
+        water_profile="data/demand_profiles/water-heat-profile.csv"
+    output:
+        heat_timeseries= "demand_timeseries/heat_demand_2014.csv"
+    notebook: "notebooks/calculate_heat_profiles.py.ipynb"
