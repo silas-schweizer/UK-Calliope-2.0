@@ -5,4 +5,4 @@
 .vscode/
 .ipynb_checkpoints/
 /data/shapefile
-
+/data/NUTS_RG_03M_2010_4326_LEVL_3.geojson
