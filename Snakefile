@@ -25,10 +25,11 @@ rule unzip_calliope_zones:
         "data/calliope_zones.zip"
     output:
         "data/calliope_zones/"
-    shell: """
-            unzip -d data/ data/calliope_zones.zip
-            rm data/__MACOSX
-            """
+    shell: 
+        """
+        unzip -d data/ data/calliope_zones.zip
+        rm data/__MACOSX
+        """
 
 rule generate_elec_profile:
     input:
@@ -36,7 +37,7 @@ rule generate_elec_profile:
         lau1_units="data/lau1_units.geojson",
         load_profile="data/load_profile.csv", 
     	calliope_zones="data/shapefile",
-        pop_uk="shapefiles/population-uk.tif"
+        pop_uk="data/population-uk.tif"
     params: 
         year = config["year"]
     output: "demand_timeseries/hourly_elec_demand.csv"
@@ -54,10 +55,8 @@ rule gas_demand_per_zone:
         lau1_units="data/lau1_units.geojson",
         gas_lau1= "data/gas_lau1.csv",
         calliope_zones="data/shapefile",
-        pop_uk="shapefiles/population-uk.tif"
+        pop_uk="data/population-uk.tif"
     params:
         year = config["year"]
     output: "demand_timeseries/gas_demand_zone.csv"
     notebook: "notebooks/regional_gas_demand.py.ipynb"
-
-
