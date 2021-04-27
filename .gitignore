@@ -7,4 +7,5 @@
 /data/shapefile
 notebooks/__pycache__
 /data/NUTS_RG_03M_2010_4326_LEVL_3.geojson
+/data/load_profile.csv
 .Rhistory
