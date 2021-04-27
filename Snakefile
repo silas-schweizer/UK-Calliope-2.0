@@ -1,4 +1,14 @@
-configfile: "config.yaml"
+from snakemake.utils import min_version
+min_version("6.0")
+
+configfile: "config/config.yaml"
+
+module euro_calliope:
+    snakefile: "/euro-calliope/Snakefile"
+    config: config["euro-calliope"]
+
+use rule * from euro_calliope as euro_*
+
 
 URL_ELEC_LAU1 = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/946419/Sub_national_electricity_consumption_statistics_2005-2019.xlsx"
 URL_LAU1_UNITS = 'https://opendata.arcgis.com/datasets/69cd46d7d2664e02b30c2f8dcc2bfaf7_0.geojson'

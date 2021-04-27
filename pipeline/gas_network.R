@@ -1,5 +1,4 @@
 setwd("C:/Users/silas/kDrive/Projects/BA/python/Pipeline")
-library('ggplot2')
 #import data
 data<- read.csv("pipeline_data.csv", header = 1)
 names(data) <- c('Name', 'Diameter', 'capacity', 'pressure', 'source')
