@@ -1,12 +1,12 @@
 from snakemake.utils import min_version
 min_version("6.0")
 
-configfile: "config/config.yaml"
+configfile: "config.yaml"
 
 module euro_calliope:
     snakefile: "/euro-calliope/Snakefile"
     config: config["euro-calliope"]
-
+    
 use rule * from euro_calliope as euro_*
 
 
