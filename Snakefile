@@ -27,11 +27,12 @@ rule unzip_calliope_zones:
     input: 
         "data/calliope_zones.zip"
     output:
-        "data/calliope_zones/"
+        "data/shapefile/"
     shell: 
         """
-        unzip -d data/ data/calliope_zones.zip
+        unzip -d data/shapefile data/calliope_zones.zip
         rm data/__MACOSX
+        rm data/calliope_zones.zip
         """
 
 rule generate_elec_profile:
@@ -43,7 +44,7 @@ rule generate_elec_profile:
         pop_uk="data/population-uk.tif"
     params: 
         year = config["year"]
-    output: "demand_timeseries/hourly_elec_demand.csv"
+    output: "demand_timeseries/electricity_demand_2014.csv"
     notebook: "notebooks/elec_profile.py.ipynb"
 
 rule download_gas_datasets:
