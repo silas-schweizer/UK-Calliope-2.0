@@ -1,4 +1,14 @@
+from snakemake.utils import min_version
+min_version("6.0")
+
 configfile: "config.yaml"
+
+module euro_calliope:
+    snakefile: "/euro-calliope/Snakefile"
+    config: config["euro-calliope"]
+    
+use rule * from euro_calliope as euro_*
+
 
 URL_ELEC_LAU1 = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/946419/Sub_national_electricity_consumption_statistics_2005-2019.xlsx"
 URL_LAU1_UNITS = 'https://opendata.arcgis.com/datasets/69cd46d7d2664e02b30c2f8dcc2bfaf7_0.geojson'
@@ -27,11 +37,12 @@ rule unzip_calliope_zones:
     input: 
         "data/calliope_zones.zip"
     output:
-        "data/calliope_zones/"
+        "data/shapefile/"
     shell: 
         """
-        unzip -d data/ data/calliope_zones.zip
+        unzip -d data/shapefile data/calliope_zones.zip
         rm data/__MACOSX
+        rm data/calliope_zones.zip
         """
 
 rule generate_elec_profile:
@@ -43,7 +54,7 @@ rule generate_elec_profile:
         pop_uk="data/population-uk.tif"
     params: 
         year = config["year"]
-    output: "demand_timeseries/hourly_elec_demand.csv"
+    output: "demand_timeseries/electricity_demand_2014.csv"
     notebook: "notebooks/elec_profile.py.ipynb"
 
 rule download_gas_datasets:
