@@ -1,4 +1,96 @@
 year: 2014
-scope:
+euro_calliope:
+    data-sources:
+        biofuel-potentials: euro-calliope/data/biofuels/potentials/{feedstock}.csv
+        biofuel-costs: euro-calliope/data/biofuels/costs/{feedstock}.csv
+        eez: data/World_EEZ_v10_20180221/eez_v10.shp
+        irena-generation: euro-calliope/data/irena/hydro-generation-europe.csv
+        national-phs-storage-capacities: euro-calliope/data/pumped-hydro/storage-capacities-gwh.csv
+        capacity-factors: https://zenodo.org/record/3899687/files/{filename}?download=1
+        gadm: https://biogeo.ucdavis.edu/data/gadm3.6/gpkg/gadm36_{country_code}_gpkg.zip
+        hydro-basins: https://www.dropbox.com/sh/hmpwobbz9qixxpe/AADeU9iCgMd3ZO1KgrFmfWu6a/HydroBASINS/standard/eu/hybas_eu_lev07_v1c.zip?dl=1
+        hydro-stations: https://zenodo.org/record/4289229/files/energy-modelling-toolkit/hydro-power-database-v7.zip?download=1
+        load: https://data.open-power-system-data.org/time_series/2019-06-05/time_series_60min_stacked.csv
+        nuts: https://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/NUTS_2013_01M_SH.zip
+        potentials: https://zenodo.org/record/3533038/files/possibility-for-electricity-autarky.zip
+    root-directory: euro-calliope # point to the root directory, if working directory is not root directory
+    cluster-sync:
+        url: euler.ethz.ch
+        send-ignore: .syncignore-send
+        receive-ignore: .syncignore-receive
+        cluster-base-dir: ~/Develop/balancing-act/
+        local-results-dir: build/euler
+    scaling-factors: # values are tuned for models with a few hours resolution and one year duration
+        power: 0.00001 # from MW(h) to 100 GW(h)
+        area: 0.0001 # from km2 to 10,000 km2
+        monetary: 0.000000001 # from EUR to 1 billion EUR
+    capacity-factors:
+        min: 0.001 # consider smaller values to be 0; this helps numerics in the LP
+        max: 10 # for hydro reservoirs, leading to a numerical range of 1e5 (hourly resolution)
+        average: # average estimation used to transform annual fixed to variable costs
+            pv: 0.139 # median of average 2016 open-field factors for ~2700 points in Europe
+            onshore: 0.3021 # median of average 2016 factors for ~2700 points in Europe
+            offshore: 0.4223 # median of average 2016 factors for ~2800 points in Europe
+            ror: 0.536781 # median of average 2016 factors for 1889 hydro stations in Europe
+        trim-ninja-timeseries: True # trims renewables.ninja timeseries to the year in question
+    year: 2016
+    crs: "EPSG:4326"
+    parameters:
+        maximum-installable-power-density: # this is not the yield, but the density of installed power
+            pv-on-tilted-roofs: 160 # (MW/km^2) from [@Gagnon:2016][@Klauser:2016], i.e. 16% efficiency
+            pv-on-flat-areas: 80 # (MW/km^2) from [@Gagnon:2016][@Klauser:2016][@Wirth:2017]
+            onshore-wind: 8 # (MW/km^2) from [@EuropeanEnvironmentAgency:2009]
+            offshore-wind: 15 # (MW/km^2) from [@EuropeanEnvironmentAgency:2009]
+        roof-share: # from [@Trondle:2019]
+            E: 0.1660
+            N: 0.1817
+            S: 0.1821
+            W: 0.1681
+            flat: 0.3020
+        jrc-biofuel:
+            scenario: "medium"
+            potential-year: "2020"
+            cost-year: "2030"
+        biofuel-efficiency: 0.45
+    quality-control:
+        load:
+            acceptable-load-data-gap-hours: 48  # some load data is patchy and we fill it with other years' data if the missing data in a given year is above this many hours.
+            outlier-data-thresholds:
+                relative-to-mean-min: 0.25
+                relative-to-mean-max: 2
+                percentage-deviation-post-cleaning-max: 1
+            entsoe-data-priority:
+                - actual_entsoe_transparency
+                - actual_entsoe_power_statistics
+        hydro:
+            scale-phs-according-to-geth-et-al: false
+    sea-connections:
+        national: # Source: https://www.entsoe.eu/data/map/
+            - [NOR, GBR]
+            - [GBR, FRA]
+            - [GBR, BEL]
+            - [GBR, NLD]
+            - [GBR, IRL]
+            - [DNK, GBR] # Viking link
+        regional: # Source: https://www.entsoe.eu/data/map/
+            - [NOR.13_1, GBR.1_1] # Rogaland and England
+            - [GBR.1_1, FRA.7_1] # England and Hauts-de-France
+            - [GBR.1_1, BEL.2_1] # England and Vlaanderen
+            - [GBR.1_1, NLD.14_1] # England and Zuid-Holland
+            - [GBR.4_1, IRL.17_1] # Wales and Meath
+            - [GBR.3_1, GBR.2_1] # Scotland and Northern Ireland
+    scope:
+        countries:
+            - "United Kingdom"
+        bounds:
+            x_min: -15.8 # in degrees east
+            x_max: 37  # in degrees east
+            y_min: 30  # in degrees north
+            y_max: 75  # in degrees north
+    shapes: # This config must be consistent with data from https://doi.org/10.5281/zenodo.3244985.
+        national:
+            United Kingdom: nuts0
+        regional:
+            United Kingdom: gadm1
   countries:
     -"United Kingdom"
