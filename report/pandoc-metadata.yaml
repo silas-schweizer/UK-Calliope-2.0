@@ -1,0 +1,21 @@
+---
+title: UK_Calliope
+author:
+    - Silas Schweizer
+institute: ETH Zurich
+tags:
+    - reproducible-research
+abstract: |
+    Updating UK-Calliope using snakemake
+bibliography: literature.yaml
+csl: apa.csl
+link-citations: True
+css:
+    - reset.css
+    - report.css
+lang: en-GB
+xnos-cleveref: True
+fignos-plus-name: Figure
+tablenos-plus-name: Table
+date: 2021-05-04
+---

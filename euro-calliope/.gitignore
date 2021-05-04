@@ -1,0 +1,19 @@
+build
+data
+
+notebooks
+
+gurobi.log
+
+# Python
+*.pyc
+build/
+dist/
+__pycache__
+*.egg-info
+.cache/
+.pytest_cache
+
+# Snakemake
+.snakemake/
+dag.pdf
